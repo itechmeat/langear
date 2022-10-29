@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC } from 'react'
 
-type ProjectsCreatePageType = {};
+type ProjectsCreatePageType = {}
 
 export const ProjectsCreatePage: FC<ProjectsCreatePageType> = () => {
-  return <div>ProjectsCreatePage</div>;
-};
+  return <div>ProjectsCreatePage</div>
+}

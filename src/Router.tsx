@@ -1,16 +1,16 @@
-import { FC } from "react";
+import { FC } from 'react'
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-} from "react-router-dom";
-import { HomePage } from "@/pages/HomePage";
-import { ProjectsListPage } from "@/pages/ProjectsListPage";
-import { ProjectsCreatePage } from "@/pages/ProjectsCreatePage";
-import { ProjectsItemPage } from "@/pages/ProjectsItemPage";
-import { ProjectsEditPage } from "@/pages/ProjectsEditPage";
-import { NotFoundPage } from "@/pages/NotFoundPage";
+} from 'react-router-dom'
+import { HomePage } from '@/pages/HomePage'
+import { ProjectsListPage } from '@/pages/ProjectsListPage'
+import { ProjectsCreatePage } from '@/pages/ProjectsCreatePage'
+import { ProjectsItemPage } from '@/pages/ProjectsItemPage'
+import { ProjectsEditPage } from '@/pages/ProjectsEditPage'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,10 +27,10 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
-    </Route>
-  )
-);
+    </Route>,
+  ),
+)
 
 export const Router: FC = () => {
-  return <RouterProvider router={router} />;
-};
+  return <RouterProvider router={router} />
+}

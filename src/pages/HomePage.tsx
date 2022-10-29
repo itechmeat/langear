@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC } from 'react'
 
-type HomePageType = {};
+type HomePageType = {}
 
 export const HomePage: FC<HomePageType> = () => {
-  return <div>HomePage</div>;
-};
+  return <div>HomePage</div>
+}
