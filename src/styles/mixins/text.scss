@@ -1,0 +1,9 @@
+@mixin textEllipsis($lineCount) {
+  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $lineCount;
+}

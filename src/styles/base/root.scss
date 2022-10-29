@@ -1,0 +1,13 @@
+body {
+  height: 100%;
+  min-height: 100vh;
+  background: var(--color-common);
+  font-size: var(--font-m);
+  font-weight: var(--font-regular);
+  font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
