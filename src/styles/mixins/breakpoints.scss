@@ -1,0 +1,12 @@
+$bp-desktop:    960px;
+$bp-mobile:     480px;
+
+@mixin device($size) {
+  @if $size == desktop {
+    @media (min-width: $bp-desktop) { @content; }
+  } @else if $size == mobile {
+    @media (max-width: $bp-mobile) { @content; }
+  } @else {
+    @content;
+  }
+}
