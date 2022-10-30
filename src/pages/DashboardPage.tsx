@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import { MainLayout } from '@/features/layout/MainLayout/MainLayout'
 
-type NotFoundPageType = {}
+type DashboardPageType = {}
 
-export const NotFoundPage: FC<NotFoundPageType> = () => {
+export const DashboardPage: FC<DashboardPageType> = () => {
   return (
     <MainLayout>
-      <h1>404</h1>
+      <h1>Dashboard</h1>
     </MainLayout>
   )
 }
