@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 import { HomePage } from '@/pages/HomePage'
+import { DashboardPage } from '@/pages/DashboardPage'
 import { ProjectsListPage } from '@/pages/ProjectsListPage'
 import { ProjectsCreatePage } from '@/pages/ProjectsCreatePage'
 import { ProjectsItemPage } from '@/pages/ProjectsItemPage'
@@ -16,7 +17,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<HomePage />} />
-      <Route path="dashboard" element={<HomePage />} />
+      <Route path="dashboard" element={<DashboardPage />} />
       <Route path="projects">
         <Route index element={<ProjectsListPage />} />
         <Route path="create" element={<ProjectsCreatePage />} />

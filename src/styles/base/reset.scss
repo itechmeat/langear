@@ -26,21 +26,6 @@ html {
   min-height: 100vh;
 }
 
-a,
-a:visited {
-  color: var(--color-link);
-  text-decoration-skip-ink: none;
-  transition: all ease 200ms;
-
-  &:hover {
-    color: var(--color-link-hover);
-  }
-
-  &:active {
-    color: var(--color-link-active);
-  }
-}
-
 // Remove the ugly autocomplete background in Chrome
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
