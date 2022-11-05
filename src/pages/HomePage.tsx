@@ -1,12 +1,25 @@
 import { FC } from 'react'
-import { MainLayout } from '@/features/layout/MainLayout/MainLayout'
+import { Auth } from '@/features/user/Auth/Auth'
+import { useAuthenticationStatus } from '@nhost/react'
+import { NavLink } from 'react-router-dom'
 
 type HomePageType = {}
 
 export const HomePage: FC<HomePageType> = () => {
+  const { isAuthenticated, isLoading } = useAuthenticationStatus()
+
   return (
-    <MainLayout>
+    <div>
       <h1>Homepage</h1>
-    </MainLayout>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : !isAuthenticated ? (
+        <Auth />
+      ) : (
+        <div>
+          <NavLink to="dashboard">Dashboard</NavLink>
+        </div>
+      )}
+    </div>
   )
 }

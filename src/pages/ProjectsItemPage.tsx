@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
-import { MainLayout } from '@/features/layout/MainLayout/MainLayout'
 
 type ProjectsItemPageType = {}
 
@@ -8,7 +7,7 @@ export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
   const { id } = useParams()
 
   return (
-    <MainLayout>
+    <div>
       <h1>Project #{id}</h1>
 
       <p>
@@ -18,6 +17,6 @@ export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
       <p>
         <NavLink to="..">Back to projects list</NavLink>
       </p>
-    </MainLayout>
+    </div>
   )
 }

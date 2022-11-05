@@ -1,13 +1,12 @@
 import { FC } from 'react'
 import { Button } from 'ariakit/button'
 import { NavLink } from 'react-router-dom'
-import { MainLayout } from '@/features/layout/MainLayout/MainLayout'
 
 type ProjectsListPageType = {}
 
 export const ProjectsListPage: FC<ProjectsListPageType> = () => {
   return (
-    <MainLayout>
+    <div>
       <h1>Your projects</h1>
 
       <ul>
@@ -27,6 +26,6 @@ export const ProjectsListPage: FC<ProjectsListPageType> = () => {
           Add new project
         </Button>
       </p>
-    </MainLayout>
+    </div>
   )
 }

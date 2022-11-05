@@ -5,6 +5,8 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from 'react-router-dom'
+import { MainLayout } from '@/features/layout/MainLayout/MainLayout'
+import { ProtectedRoute } from '@/features/user/Auth/ProtectedRoute'
 import { HomePage } from '@/pages/HomePage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { ProjectsListPage } from '@/pages/ProjectsListPage'
@@ -17,8 +19,24 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<HomePage />} />
-      <Route path="dashboard" element={<DashboardPage />} />
-      <Route path="projects">
+      <Route
+        path="dashboard"
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DashboardPage />} />
+      </Route>
+      <Route
+        path="projects"
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<ProjectsListPage />} />
         <Route path="create" element={<ProjectsCreatePage />} />
         <Route path=":id">
