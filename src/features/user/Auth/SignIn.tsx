@@ -11,7 +11,7 @@ export const SignIn: FC<SignInProps> = () => {
     useSignInEmailPassword()
 
   const form = useFormState({
-    defaultValues: { firstName: '', lastName: '', email: '', password: '' },
+    defaultValues: { email: '', password: '' },
   })
 
   if (isSuccess) {
