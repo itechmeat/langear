@@ -4,7 +4,6 @@ import { useMutation, useQuery } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
 import { EditProjectForm } from '@/features/projects/EditProjectForm/EditProjectForm'
 import { toast } from 'react-hot-toast'
-
 import { DELETE_PROJECT, GET_PROJECT_BY_ID } from '@/features/projects/queries'
 import { ProjectRead } from '@/features/projects/types'
 import { MembersList } from '@/features/members/MembersList/MembersList'
