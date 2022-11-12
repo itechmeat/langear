@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { Button } from 'ariakit/button'
-import { useAuthenticationStatus, useSignOut } from '@nhost/react'
+import { useAuthenticationStatus, useSignOut, useUserData } from '@nhost/react'
 import { Navigation } from '@/features/layout/Navigation/Navigation'
 import styles from './Header.module.scss'
 
@@ -11,6 +11,7 @@ type HeaderProps = {}
 export const Header: FC<HeaderProps> = () => {
   const navigate = useNavigate()
   const { isAuthenticated, isLoading } = useAuthenticationStatus()
+  const userData = useUserData()
   const { signOut } = useSignOut()
 
   const handleSignOut = useCallback(() => {
@@ -28,7 +29,10 @@ export const Header: FC<HeaderProps> = () => {
 
       <div className={styles.user}>
         {isAuthenticated ? (
-          <Button onClick={handleSignOut}>Sign Out</Button>
+          <div>
+            <span style={{ marginRight: 20 }}>{userData?.displayName}</span>
+            <Button onClick={handleSignOut}>Sign Out</Button>
+          </div>
         ) : (
           <button>Sign In</button>
         )}
