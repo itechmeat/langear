@@ -1,23 +1,23 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { useAuthenticated } from '@nhost/react'
-
-const GET_PROJECTS = gql`
-  query MyProjects {
-    projects {
-      id
-      name
-      description
-    }
-  }
-`
+import { GET_PROJECTS } from '@/features/projects/queries'
+import { Project } from '@/features/projects/types'
 
 type ProjectsListPageType = {}
 
 export const ProjectsListPage: FC<ProjectsListPageType> = () => {
   const isAuthenticated = useAuthenticated()
-  const { loading, data, error } = useQuery(GET_PROJECTS)
+  const { loading, data, error, refetch } = useQuery(GET_PROJECTS)
+
+  const projects: Project[] = data?.projects
+
+  useEffect(() => {
+    if (data) {
+      refetch()
+    }
+  }, [data])
 
   if (loading) {
     return <div>Loading...</div>
@@ -35,13 +35,17 @@ export const ProjectsListPage: FC<ProjectsListPageType> = () => {
     <div>
       <h1>Your projects</h1>
 
-      <ul>
-        {data?.projects?.map((project: any) => (
-          <li key={project.id}>
-            <NavLink to={project.id}>{project.name}</NavLink>
-          </li>
-        ))}
-      </ul>
+      {projects?.length ? (
+        <ul>
+          {projects.map((project: Project) => (
+            <li key={project.id}>
+              <NavLink to={project.id}>{project.name}</NavLink>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div>You don't have any projects</div>
+      )}
 
       <p>
         <NavLink to="create" className="button">

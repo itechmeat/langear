@@ -1,84 +1,67 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import { gql, useMutation, useQuery } from '@apollo/client'
-import { useAuthenticated } from '@nhost/react'
+import { useMutation, useQuery } from '@apollo/client'
+import { useAuthenticated, useUserId } from '@nhost/react'
+import { EditProjectForm } from '@/features/projects/EditProjectForm/EditProjectForm'
 import { toast } from 'react-hot-toast'
-import { Form, FormError, FormInput, FormLabel, FormSubmit, useFormState } from 'ariakit/form'
-
-const GET_PROJECT = gql`
-  query ProjectById($id: uuid!) {
-    projects_by_pk(id: $id) {
-      id
-      name
-      description
-    }
-  }
-`
-
-const UPDATE_PROJECT = gql`
-  mutation UpdateProject($id: uuid!, $name: String, $description: String) {
-    update_projects_by_pk(
-      pk_columns: { id: $id }
-      _set: { name: $name, description: $description }
-    ) {
-      id
-      name
-      description
-    }
-  }
-`
+import { DELETE_PROJECT, GET_PROJECT_BY_ID } from '@/features/projects/queries'
+import { ProjectRead } from '@/features/projects/types'
+import { MembersList } from '@/features/members/MembersList/MembersList'
+import { AddMemberForm } from '@/features/members/AddMemberForm/AddMemberForm'
+import { FoldersList } from '@/features/folders/FoldersList/FoldersList'
+import { AddFolderForm } from '@/features/folders/AddFolderForm/AddFolderForm'
 
 type ProjectsEditPageType = {}
 
 export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
-  const { id } = useParams()
+  const { id: projectId } = useParams()
   const navigate = useNavigate()
   const isAuthenticated = useAuthenticated()
-  const { loading, data, error } = useQuery(GET_PROJECT, {
-    variables: { id },
+  const userId = useUserId()
+  const [isEdited, setEditedState] = useState(false)
+  const { loading, data, error, refetch } = useQuery(GET_PROJECT_BY_ID, {
+    variables: { id: projectId },
   })
-  const [updateProject, { loading: updatingProject }] = useMutation(UPDATE_PROJECT)
 
-  const form = useFormState({
-    defaultValues: { name: '', description: '' },
-  })
+  const [deleteProject, { loading: deletingProject }] = useMutation(DELETE_PROJECT)
+
+  const [project, setProject] = useState<ProjectRead>(data?.projects_by_pk)
+  const isOwner = useMemo(() => {
+    return project?.ownerId === userId
+  }, [project, userId])
 
   useEffect(() => {
-    if (!form.values.name && data?.projects_by_pk?.name) {
-      form.setValue('name', data.projects_by_pk.name)
-    }
-    if (!form.values.description && data?.projects_by_pk?.description) {
-      form.setValue('description', data.projects_by_pk.description)
+    if (data?.projects_by_pk) {
+      setProject(data.projects_by_pk)
     }
   }, [data])
 
-  form.useSubmit(async () => {
-    if (!isAuthenticated) return
-    const { name, description } = form.values
+  const update = () => {
+    refetch()
+    setEditedState(false)
+  }
 
+  const handleDelete = async () => {
+    if (!projectId) return
     try {
-      await updateProject({
+      await deleteProject({
         variables: {
-          id,
-          name: name ? name.trim() : data?.projects_by_pk?.name || '',
-          description: description ? description.trim() : data?.projects_by_pk?.description || '',
+          id: projectId,
         },
       })
-      toast.success('Updated successfully', { id: 'updateProject' })
-      navigate(`..`)
+      toast.success('Deleted successfully', { id: 'deleteProject' })
+      navigate(`../..`)
     } catch (error) {
-      toast.error('Unable to update project', { id: 'updateProject' })
+      toast.error('Unable to delete project', { id: 'deleteProject' })
     }
-  })
-
-  const disableForm = updatingProject
-
-  if (loading) {
-    return <div>Loading...</div>
   }
 
   if (!isAuthenticated) {
     return <div>You must be authenticated to see this page</div>
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   if (error) {
@@ -87,27 +70,41 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
 
   return (
     <div>
-      <h1>{data.projects_by_pk.name}</h1>
+      <h1>{project?.name}</h1>
 
-      <p>{data.projects_by_pk.description}</p>
+      {!isEdited && (
+        <p>
+          {project?.description} <button onClick={() => setEditedState(true)}>edit</button>
+        </p>
+      )}
 
-      <Form state={form} aria-labelledby="edit-project-form" className="wrapper">
-        <div className="field">
-          <FormLabel name={form.names.name}>Name</FormLabel>
-          <FormInput name={form.names.name} placeholder="name" />
-          <FormError name={form.names.name} className="error" />
-        </div>
-        <div className="field">
-          <FormLabel name={form.names.description}>Description</FormLabel>
-          <FormInput name={form.names.description} placeholder="description" />
-          <FormError name={form.names.description} className="error" />
-        </div>
-        <div className="buttons">
-          <FormSubmit className="button" disabled={disableForm}>
-            {updatingProject ? <span>LOADING...</span> : 'Update'}
-          </FormSubmit>
-        </div>
-      </Form>
+      {isEdited && project && <EditProjectForm project={project} onSave={update} />}
+
+      <hr />
+
+      {project && <MembersList members={project.members} canDelete={isOwner} onUpdate={refetch} />}
+      {projectId && isOwner && <AddMemberForm projectId={projectId} onUpdate={refetch} />}
+
+      <hr />
+
+      {project && <FoldersList folders={project.folders} canDelete={isOwner} onUpdate={refetch} />}
+      {project && isOwner && projectId && (
+        <AddFolderForm
+          projectId={projectId}
+          suggestedName={
+            !project?.folders?.length
+              ? 'Default folder'
+              : `New folder ${project.folders.length + 1}`
+          }
+          onUpdate={refetch}
+        />
+      )}
+
+      {isOwner && (
+        <p>
+          <button onClick={handleDelete}>delete</button>
+        </p>
+      )}
 
       <p>
         <NavLink to="..">Back to project</NavLink>
