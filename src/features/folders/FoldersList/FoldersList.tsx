@@ -21,9 +21,9 @@ export const FoldersList: FC<FoldersListType> = ({ folders, canDelete, onUpdate 
         },
       })
       onUpdate()
-      toast.success('Deleted successfully', { id: 'deleteFolder' })
+      toast.success('Deleted successfully', { id: 'deleteSegment' })
     } catch (error) {
-      toast.error('Unable to delete folder', { id: 'deleteFolder' })
+      toast.error('Unable to delete segment', { id: 'deleteSegment' })
     }
   }
 
@@ -35,7 +35,8 @@ export const FoldersList: FC<FoldersListType> = ({ folders, canDelete, onUpdate 
         <ul>
           {folders.map((folder: Folder) => (
             <li key={folder.id}>
-              {folder.name || folder.id} ({folder.language}, {folder.format})
+              {folder.name || folder.id} ({folder?.languages?.map(lang => lang.language).join(' ,')}
+              , {folder.format})
               {canDelete && <button onClick={() => handleDelete(folder.id)}>delete</button>}
             </li>
           ))}

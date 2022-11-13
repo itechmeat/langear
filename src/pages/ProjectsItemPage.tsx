@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
@@ -8,7 +8,7 @@ import { ProjectRead } from '@/features/projects/types'
 type ProjectsItemPageType = {}
 
 export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
-  const { id: projectId } = useParams()
+  const { projectId } = useParams()
   const isAuthenticated = useAuthenticated()
   const userId = useUserId()
   const { loading, data, error } = useQuery(GET_PROJECT_BY_ID, {
@@ -38,6 +38,16 @@ export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
       <h1>{project?.name}</h1>
 
       <p>{project?.description}</p>
+
+      {!!project?.folders?.length && (
+        <ul>
+          {project.folders.map(folder => (
+            <li key={folder.id}>
+              <NavLink to={folder.id}>{folder.name}</NavLink>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {isOwner && (
         <p>

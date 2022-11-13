@@ -39,14 +39,19 @@ export const AddFolderForm: FC<AddFolderFormType> = ({
         variables: {
           name,
           projectId,
-          language,
           format,
+          languages: [
+            {
+              language,
+              customName: '',
+            },
+          ],
         },
       })
       onUpdate()
-      toast.success('Folder added successfully', { id: 'addUser' })
+      toast.success('Folder added successfully', { id: 'addFolder' })
     } catch (error) {
-      toast.error('Unable to add folder', { id: 'addUser' })
+      toast.error('Unable to add folder', { id: 'addFolder' })
     }
   })
 
@@ -64,7 +69,7 @@ export const AddFolderForm: FC<AddFolderFormType> = ({
         </div>
 
         <div className="field">
-          <FormLabel name={folderForm.names.language}>Language</FormLabel>
+          <FormLabel name={folderForm.names.language}>Default Language</FormLabel>
           <FormField
             as={Select}
             name={folderForm.names.language}

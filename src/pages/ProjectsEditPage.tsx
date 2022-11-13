@@ -14,7 +14,7 @@ import { AddFolderForm } from '@/features/folders/AddFolderForm/AddFolderForm'
 type ProjectsEditPageType = {}
 
 export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
-  const { id: projectId } = useParams()
+  const { projectId } = useParams()
   const navigate = useNavigate()
   const isAuthenticated = useAuthenticated()
   const userId = useUserId()
