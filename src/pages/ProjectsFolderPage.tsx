@@ -8,6 +8,7 @@ import { GET_FOLDER_BY_ID } from '@/features/folders/queries'
 import { ProjectRead } from '@/features/projects/types'
 import { FolderRead } from '@/features/folders/types'
 import { CREATE_SEGMENT, DELETE_SEGMENT } from '@/features/segments/queries'
+import { FolderLangSwitcher } from '@/features/folders/FolderLangSwitcher/FolderLangSwitcher'
 import { FolderBoard } from '@/features/folders/FolderBoard/FolderBoard'
 
 type ProjectsFolderPageType = {}
@@ -84,7 +85,7 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
     return <div>Error in the query {projectError?.message || folderError?.message}</div>
   }
 
-  if (!folder) {
+  if (!folder || !folderId) {
     return <div>Something wrong</div>
   }
 
@@ -96,8 +97,10 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
 
       <p>{project?.description}</p>
 
+      <FolderLangSwitcher currentLanguage={currentLanguage} folder={folder} />
+
       <FolderBoard
-        folder={folder}
+        folderId={folderId}
         currentLanguage={currentLanguage}
         onCreate={handleAddSegment}
         onDelete={handleDeleteSegment}

@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react'
+import { ChangeEvent, FC, useMemo } from 'react'
 import { useUserId } from '@nhost/react'
 import { useMutation } from '@apollo/client'
 import { toast } from 'react-hot-toast'
@@ -22,27 +22,21 @@ export const SegmentItem: FC<SegmentItemType> = ({ segment, currentLanguage, onD
     return segment.phrases.find(phrase => phrase.language === currentLanguage)
   }, [segment])
 
-  const handleCreatePhrase = async (event: any) => {
+  const handleChangePhrase = async (event: ChangeEvent<HTMLInputElement>) => {
+    const phraseId = phrase?.id
     const value = event.target.value
     try {
-      await createPhrase({
-        variables: {
-          value,
-          segmentId: segment.id,
-          lastUserId: userId,
-          language: currentLanguage,
-        },
-      })
-      toast.success('Phrase added successfully', { id: 'addPhrase' })
-    } catch (error) {
-      toast.error('Unable to add phrase', { id: 'addPhrase' })
-    }
-  }
-
-  const handleUpdatePhrase = async (event: any) => {
-    if (!phrase?.id) return
-    const value = event.target.value
-    try {
+      if (!phraseId) {
+        await createPhrase({
+          variables: {
+            value,
+            segmentId: segment.id,
+            lastUserId: userId,
+            language: currentLanguage,
+          },
+        })
+        return
+      }
       await updatePhrase({
         variables: {
           id: phrase.id,
@@ -50,13 +44,12 @@ export const SegmentItem: FC<SegmentItemType> = ({ segment, currentLanguage, onD
           lastUserId: userId,
         },
       })
-      toast.success('Phrase added successfully', { id: 'updatePhrase' })
     } catch (error) {
-      toast.error('Unable to add phrase', { id: 'updatePhrase' })
+      toast.error('Unable to change phrase', { id: 'changePhrase' })
     }
   }
 
-  const handleUpdateSegment = async (event: any) => {
+  const handleUpdateSegment = async (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     try {
       await updateSegment({
@@ -80,11 +73,7 @@ export const SegmentItem: FC<SegmentItemType> = ({ segment, currentLanguage, onD
       </td>
       <td key={phrase?.value || 0}>
         Phrase:
-        {!phrase ? (
-          <input defaultValue="" onBlur={handleCreatePhrase} />
-        ) : (
-          <input defaultValue={phrase.value} onBlur={handleUpdatePhrase} />
-        )}
+        <input defaultValue={!phrase ? '' : phrase.value} onBlur={handleChangePhrase} />
       </td>
       <td>
         <button onClick={onDelete}>delete</button>

@@ -40,3 +40,31 @@ export const DELETE_SEGMENT = gql`
     }
   }
 `
+
+export const AGGREGATE_SEGMENTS_BY_FOLDER_ID = gql`
+  subscription AggregateSegmentsByFolderId($id: uuid!, $language: languages_enum!) {
+    segments_aggregate(where: { folder_id: { _eq: $id } }) {
+      aggregate {
+        count
+      }
+      nodes {
+        id
+        name
+        parentId: parent_id
+        folderId: folder_id
+        lastUserId: last_user_id
+        createdAt: created_at
+        updatedAt: updated_at
+        phrases(where: { language: { _eq: $language } }) {
+          id
+          value
+          language
+          segmentId: segment_id
+          lastUserId: last_user_id
+          createdAt: created_at
+          updatedAt: updated_at
+        }
+      }
+    }
+  }
+`
