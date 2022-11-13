@@ -103,7 +103,7 @@ export const GET_PROJECT_BY_ID = gql`
         projectId: project_id
         createdAt: created_at
         updatedAt: updated_at
-        language
+        languages
         format
       }
     }

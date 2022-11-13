@@ -13,6 +13,7 @@ import { ProjectsListPage } from '@/pages/ProjectsListPage'
 import { ProjectsCreatePage } from '@/pages/ProjectsCreatePage'
 import { ProjectsItemPage } from '@/pages/ProjectsItemPage'
 import { ProjectsEditPage } from '@/pages/ProjectsEditPage'
+import { ProjectsFolderPage } from '@/pages/ProjectsFolderPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 const router = createBrowserRouter(
@@ -39,9 +40,13 @@ const router = createBrowserRouter(
       >
         <Route index element={<ProjectsListPage />} />
         <Route path="create" element={<ProjectsCreatePage />} />
-        <Route path=":id">
+        <Route path=":projectId">
           <Route index element={<ProjectsItemPage />} />
           <Route path="edit" element={<ProjectsEditPage />} />
+          <Route path=":folderId">
+            <Route index element={<ProjectsFolderPage />} />
+            <Route path=":lang" element={<ProjectsFolderPage />} />
+          </Route>
         </Route>
       </Route>
 
