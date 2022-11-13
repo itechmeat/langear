@@ -21,6 +21,23 @@ export const CREATE_FOLDER = gql`
   }
 `
 
+export const UPDATE_FOLDER = gql`
+  mutation UpdateFolder($id: uuid!, $name: String!, $languages: jsonb!, $format: formats_enum!) {
+    update_folders_by_pk(
+      pk_columns: { id: $id }
+      _set: { name: $name, languages: $languages, format: $format }
+    ) {
+      id
+      name
+      createdAt: created_at
+      updatedAt: updated_at
+      projectId: project_id
+      languages
+      format
+    }
+  }
+`
+
 export const DELETE_FOLDER = gql`
   mutation DeleteFolder($id: uuid!) {
     delete_folders_by_pk(id: $id) {
@@ -39,24 +56,6 @@ export const GET_FOLDER_BY_ID = gql`
       projectId: project_id
       languages
       format
-      segments {
-        id
-        name
-        folderId: folder_id
-        parentId: parent_id
-        createdAt: created_at
-        updatedAt: updated_at
-        lastUserId: last_user_id
-        phrases {
-          id
-          value
-          language
-          createdAt: created_at
-          updatedAt: updated_at
-          segmentId: segment_id
-          lastUserId: last_user_id
-        }
-      }
     }
   }
 `
