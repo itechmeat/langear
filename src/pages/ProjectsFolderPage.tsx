@@ -8,8 +8,9 @@ import { GET_FOLDER_BY_ID } from '@/features/folders/queries'
 import { ProjectRead } from '@/features/projects/types'
 import { FolderRead } from '@/features/folders/types'
 import { CREATE_SEGMENT, DELETE_SEGMENT } from '@/features/segments/queries'
-import { FolderLangSwitcher } from '@/features/folders/FolderLangSwitcher/FolderLangSwitcher'
 import { FolderBoard } from '@/features/folders/FolderBoard/FolderBoard'
+import { FolderBoardFooter } from '@/features/folders/FolderBoardFooter/FolderBoardFooter'
+import { FolderLangSwitcher } from '@/features/folders/FolderLangSwitcher/FolderLangSwitcher'
 
 type ProjectsFolderPageType = {}
 
@@ -44,6 +45,7 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
 
   const handleAddSegment = async () => {
     const name = prompt('Name?') || ''
+    if (!name?.length) return
     try {
       await createSegment({
         variables: {
@@ -97,8 +99,6 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
 
       <p>{project?.description}</p>
 
-      <FolderLangSwitcher currentLanguage={currentLanguage} folder={folder} />
-
       <FolderBoard
         folderId={folderId}
         currentLanguage={currentLanguage}
@@ -109,6 +109,10 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
       <p>
         <NavLink to="..">Back to project</NavLink>
       </p>
+
+      <FolderBoardFooter>
+        <FolderLangSwitcher currentLanguage={currentLanguage} folder={folder} />
+      </FolderBoardFooter>
     </div>
   )
 }
