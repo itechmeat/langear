@@ -3,6 +3,7 @@ import { useSubscription } from '@apollo/client'
 import { SegmentRead } from '@features/segments/types'
 import { AGGREGATE_SEGMENTS_BY_FOLDER_ID } from '@/features/segments/queries'
 import { SegmentItem } from '@/features/segments/SegmentItem/SegmentItem'
+import styles from './FolderBoard.module.scss'
 
 type FolderBoardType = {
   folderId: string

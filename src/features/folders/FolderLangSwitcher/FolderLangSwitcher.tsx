@@ -1,9 +1,11 @@
 import { FC } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
+import cn from 'classnames'
 import { toast } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
 import { FolderLanguage, FolderRead } from '@/features/folders/types'
 import { UPDATE_FOLDER } from '@/features/folders/queries'
+import styles from './FolderLangSwitcher.module.scss'
 
 type FolderLangSwitcherType = {
   folder: FolderRead
@@ -58,30 +60,42 @@ export const FolderLangSwitcher: FC<FolderLangSwitcherType> = ({ folder, current
   }
 
   return (
-    <div>
-      <ul>
+    <div className={styles.switcher}>
+      <ul className={styles.tabs}>
+        <li className={cn(styles.new)}>
+          <button onClick={handleAddLanguage}>+</button>
+        </li>
         {folder.languages.map((language, index) => (
-          <li key={language.language}>
-            {language.language === currentLanguage ? (
-              <span>
-                {language.customName || language.language}.{folder.format}
-              </span>
-            ) : (
-              <>
-                <NavLink to={`${lang ? '../' : ''}${language.language}`}>
+          <li className={cn(styles.tab, styles.main)} key={language.language}>
+            <div
+              className={cn(styles.control, {
+                [styles.active]: language.language === currentLanguage,
+              })}
+            >
+              {language.language === currentLanguage ? (
+                <span className={styles.label}>
                   {language.customName || language.language}.{folder.format}
-                </NavLink>
-                {index !== 0 && <button onClick={() => handleDeleteLanguage(index)}>delete</button>}
-              </>
-            )}
-            {index !== 0 && (
-              <button onClick={() => changeDefaultLanguage(index)}>make default</button>
-            )}
+                </span>
+              ) : (
+                <>
+                  <NavLink to={`${lang ? '../' : ''}${language.language}`} className={styles.label}>
+                    {language.customName || language.language}.{folder.format}
+                  </NavLink>
+                  {index !== 0 && (
+                    <button className={styles.delete} onClick={() => handleDeleteLanguage(index)}>
+                      x
+                    </button>
+                  )}
+                </>
+              )}
+              {index !== 0 && (
+                <button className={styles.move} onClick={() => changeDefaultLanguage(index)}>
+                  ^
+                </button>
+              )}
+            </div>
           </li>
         ))}
-        <li>
-          <button onClick={handleAddLanguage}>add language</button>
-        </li>
       </ul>
     </div>
   )
