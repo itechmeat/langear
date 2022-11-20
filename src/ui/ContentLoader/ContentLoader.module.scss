@@ -1,0 +1,9 @@
+.loading,
+.error {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--size-m);
+  text-align: center;
+}

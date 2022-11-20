@@ -1,0 +1,88 @@
+.row {
+  display: grid;
+  grid-template-columns:
+    var(--grid-num-column-size, 50px)
+    var(--grid-key-column-size, 30%)
+    1fr;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.selectedRow {
+  position: relative;
+  z-index: 1;
+  background: #e9f0fd;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: 0;
+    bottom: 0;
+    left: 49px;
+    border: 1px solid var(--color-active);
+    pointer-events: none;
+  }
+}
+
+.section {
+  background: var(--color-section-bg);
+}
+
+.num,
+.key,
+.value {
+  border: 1px solid #e2e3e3;
+  border-width: 0 1px 1px 0;
+  color: var(--color-primary);
+  line-height: 20px;
+  font-size: 12px;
+  cursor: default;
+
+  .headRow & {
+    border-color: #bfc0bf;
+    font-weight: bold;
+  }
+}
+
+.num {
+  position: relative;
+  border-color: #c0c0c0;
+  background: var(--color-section-bg);
+  color: #5f6367;
+  text-align: center;
+  user-select: none;
+
+  .selectedRow & {
+    background: #5f6369;
+    color: var(--color-common);
+  }
+}
+
+.active {
+  background: var(--color-panel-active-bg);
+}
+
+.cell {
+  height: 24px;
+  padding: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  outline: none;
+}
+
+.selected {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 1px var(--color-active), inset 0 0 0 1px var(--color-active);
+
+  &:focus {
+    box-shadow: 0 0 0 1px var(--color-active), inset 0 0 0 1px var(--color-active),
+      0 2px 4px rgba(#000, 0.3);
+  }
+}
+
+.sectionName {
+  grid-column: 2/4;
+}
