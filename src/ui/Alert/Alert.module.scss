@@ -1,0 +1,36 @@
+.alert {
+  --alert-color: var(--ui-alert-color, var(--color-hint));
+
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding: var(--size-s) var(--size-l);
+  border: 1px solid var(--alert-color);
+  border-radius: 4px;
+  background: var(--color-common);
+}
+
+.neural-alert {
+  --alert-color: var(--ui-alert-color, var(--color-hint));
+}
+.success-alert {
+  --alert-color: var(--ui-alert-color, var(--color-success));
+}
+.warning-alert {
+  --alert-color: var(--ui-alert-color, var(--color-warning));
+}
+.error-alert {
+  --alert-color: var(--ui-alert-color, var(--color-danger));
+}
+
+.pic {
+  display: flex;
+  margin-right: var(--size-xs);
+}
+
+.icon {
+  color: var(--alert-color);
+  font-size: var(--size-xl);
+  line-height: 1;
+  font-weight: 200;
+}

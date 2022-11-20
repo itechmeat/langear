@@ -1,0 +1,24 @@
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  flex: 0 0 auto;
+  position: relative;
+  background: var(--color-section-bg);
+  user-select: none;
+}
+
+.body {
+  flex: 1;
+  position: relative;
+}
+
+.grid {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  user-select: none;
+}
