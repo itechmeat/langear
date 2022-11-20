@@ -10,6 +10,7 @@ export type FolderUpdate = {
   name: string
   format: string
   languages: FolderLanguage[]
+  segmentsOrder: string[]
 }
 
 export type FolderCreate = Omit<FolderUpdate, 'id'> & {

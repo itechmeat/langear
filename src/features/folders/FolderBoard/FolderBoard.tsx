@@ -8,10 +8,8 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useSubscription } from '@apollo/client'
 import cn from 'classnames'
 import { SegmentRead } from '@features/segments/types'
-import { AGGREGATE_SEGMENTS_BY_FOLDER_ID } from '@/features/segments/queries'
 import { SegmentGridRow, SegmentLangRow } from '@/features/segments/types'
 import { SegmentRowItem, SelectedCell } from '@/features/segments/SegmentRowItem/SegmentRowItem'
 import { ContentLoader } from '@/ui/ContentLoader/ContentLoader'
@@ -24,28 +22,24 @@ const MIN_CELL_WIDTH = 20
 const MAX_CELL_WIDTH = 1000
 
 type FolderBoardType = {
-  folderId: string
+  segments: SegmentRead[]
+  order: string[]
+  isLoading?: boolean
+  errorMessage?: string
   currentLanguage: string
   onCreate: () => void
   onDelete: (id: string) => void
 }
 
 export const FolderBoard: FC<FolderBoardType> = ({
-  folderId,
+  segments,
+  order,
+  isLoading,
+  errorMessage,
   currentLanguage,
   onCreate,
   onDelete,
 }) => {
-  const {
-    loading: segmentsLoading,
-    data: segmentsData,
-    error: segmentsError,
-  } = useSubscription(AGGREGATE_SEGMENTS_BY_FOLDER_ID, {
-    variables: { id: folderId, language: currentLanguage },
-  })
-
-  const segments = segmentsData?.segments_aggregate?.nodes as SegmentRead[]
-
   const containerRef = useRef<HTMLInputElement>(null)
 
   const [selectedCells, setSelectedCells] = useState<SelectedCell | null>(null)
@@ -80,14 +74,17 @@ export const FolderBoard: FC<FolderBoardType> = ({
   const dataMap: SegmentGridRow[] = useMemo(() => {
     if (!segments) return []
     const result: SegmentGridRow[] = []
-    segments.forEach((segment: SegmentRead) => {
-      result.push({
-        id: segment.id,
-        name: segment.name,
-        phrase: segment.phrases.find(phrase => phrase.language === currentLanguage),
-        type: 'string',
-        level: 0,
-      })
+    order.forEach((segmentId: string) => {
+      const segment = segments.find(item => item.id === segmentId)
+      if (segment) {
+        result.push({
+          id: segment.id,
+          name: segment.name,
+          phrase: segment.phrases.find(phrase => phrase.language === currentLanguage),
+          type: 'string',
+          level: 0,
+        })
+      }
     })
     return result
   }, [segments])
@@ -122,26 +119,32 @@ export const FolderBoard: FC<FolderBoardType> = ({
         </div>
       </div>
 
-      <ContentLoader isLoading={segmentsLoading} error={segmentsError}>
-        <div className={styles.body}>
-          <div className={styles.grid}>
-            {dataMap.map(
-              (row, index) =>
-                row.type !== 'empty' && (
-                  <SegmentRowItem
-                    data={row}
-                    index={index}
-                    key={row.id}
-                    currentLanguage={currentLanguage}
-                    selected={selectedCells?.id === row.id ? selectedCells.target : undefined}
-                    onCellClick={handleCellClick}
-                    onChange={handleChange}
-                    onCreate={onCreate}
-                  />
-                ),
-            )}
+      <ContentLoader isLoading={isLoading} errorMessage={errorMessage}>
+        {dataMap.length > 0 ? (
+          <div className={styles.body}>
+            <div className={styles.grid}>
+              {dataMap.map(
+                (row, index) =>
+                  row.type !== 'empty' && (
+                    <SegmentRowItem
+                      data={row}
+                      index={index}
+                      key={row.id}
+                      currentLanguage={currentLanguage}
+                      selected={selectedCells?.id === row.id ? selectedCells.target : undefined}
+                      onCellClick={handleCellClick}
+                      onChange={handleChange}
+                      onCreate={onCreate}
+                    />
+                  ),
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className={styles.empty}>
+            <button onClick={onCreate}>Add first segment</button>
+          </div>
+        )}
       </ContentLoader>
     </div>
   )

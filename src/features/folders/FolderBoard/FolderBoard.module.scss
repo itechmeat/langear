@@ -21,4 +21,12 @@
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   user-select: none;
+  padding-bottom: var(--size-l);
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--size-l) var(--size-s);
 }

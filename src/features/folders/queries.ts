@@ -22,16 +22,23 @@ export const CREATE_FOLDER = gql`
 `
 
 export const UPDATE_FOLDER = gql`
-  mutation UpdateFolder($id: uuid!, $name: String!, $languages: jsonb!, $format: formats_enum!) {
+  mutation UpdateFolder(
+    $id: uuid!
+    $name: String!
+    $languages: jsonb!
+    $format: formats_enum!
+    $segmentsOrder: jsonb
+  ) {
     update_folders_by_pk(
       pk_columns: { id: $id }
-      _set: { name: $name, languages: $languages, format: $format }
+      _set: { name: $name, languages: $languages, format: $format, segments_order: $segmentsOrder }
     ) {
       id
       name
       createdAt: created_at
       updatedAt: updated_at
       projectId: project_id
+      segmentsOrder: segments_order
       languages
       format
     }
@@ -54,6 +61,7 @@ export const GET_FOLDER_BY_ID = gql`
       createdAt: created_at
       updatedAt: updated_at
       projectId: project_id
+      segmentsOrder: segments_order
       languages
       format
     }
