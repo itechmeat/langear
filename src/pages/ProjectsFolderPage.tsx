@@ -1,13 +1,18 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useSubscription } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
 import { toast } from 'react-hot-toast'
 import { GET_PROJECT_BY_ID } from '@/features/projects/queries'
-import { GET_FOLDER_BY_ID } from '@/features/folders/queries'
+import { GET_FOLDER_BY_ID, UPDATE_FOLDER } from '@/features/folders/queries'
 import { ProjectRead } from '@/features/projects/types'
 import { FolderRead } from '@/features/folders/types'
-import { CREATE_SEGMENT, DELETE_SEGMENT } from '@/features/segments/queries'
+import { SegmentRead } from '@/features/segments/types'
+import {
+  AGGREGATE_SEGMENTS_BY_FOLDER_ID,
+  CREATE_SEGMENT,
+  DELETE_SEGMENT,
+} from '@/features/segments/queries'
 import { FolderBoard } from '@/features/folders/FolderBoard/FolderBoard'
 import { FolderBoardFooter } from '@/features/folders/FolderBoardFooter/FolderBoardFooter'
 import { FolderLangSwitcher } from '@/features/folders/FolderLangSwitcher/FolderLangSwitcher'
@@ -40,20 +45,60 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
     currentLanguage = lang
   }
 
+  const {
+    loading: segmentsLoading,
+    data: segmentsData,
+    error: segmentsError,
+  } = useSubscription(AGGREGATE_SEGMENTS_BY_FOLDER_ID, {
+    variables: { id: folderId, language: currentLanguage },
+  })
+  const segments = segmentsData?.segments_aggregate?.nodes as SegmentRead[]
+
+  const [updateFolder, { loading: updatingFolder }] = useMutation(UPDATE_FOLDER)
   const [createSegment, { loading: creatingFolder }] = useMutation(CREATE_SEGMENT)
   const [deleteSegment, { loading: deletingFolder }] = useMutation(DELETE_SEGMENT)
+
+  const defineSegmentsOrder = (): string[] => {
+    const order = folder?.segmentsOrder
+    const newSegmentsInOrder: string[] = []
+    segments.forEach(segment => {
+      if (!order.includes(segment.id)) {
+        newSegmentsInOrder.push(segment.id)
+      }
+    })
+    return [...order, ...newSegmentsInOrder]
+  }
+
+  const changeFolder = async (order: string[]) => {
+    try {
+      await updateFolder({
+        variables: {
+          id: folder.id,
+          name: folder.name,
+          format: folder.format,
+          languages: folder.languages,
+          segmentsOrder: order,
+        },
+      })
+      toast.success('Folder updated successfully', { id: 'updateFolder' })
+    } catch (error) {
+      toast.error('Unable to update project', { id: 'updateFolder' })
+    }
+  }
 
   const handleAddSegment = async () => {
     const name = prompt('Name?') || ''
     if (!name?.length) return
+    const order = defineSegmentsOrder()
     try {
-      await createSegment({
+      const newSegment = await createSegment({
         variables: {
           name,
           folderId,
           lastUserId: userId,
         },
       })
+      changeFolder([...order, newSegment?.data?.insert_segments_one?.id])
       toast.success('Segment added successfully', { id: 'addSegment' })
     } catch (error) {
       toast.error('Unable to add segment', { id: 'addSegment' })
@@ -69,6 +114,12 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
           id,
         },
       })
+      const order = [...folder?.segmentsOrder]
+      const index = order.findIndex(item => item === id)
+      if (index !== -1) {
+        order.splice(index, 1)
+        changeFolder(order)
+      }
       toast.success('Deleted successfully', { id: 'deleteFolder' })
     } catch (error) {
       toast.error('Unable to delete folder', { id: 'deleteFolder' })
@@ -87,7 +138,7 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
     return <div>Error in the query {projectError?.message || folderError?.message}</div>
   }
 
-  if (!folder || !folderId) {
+  if (!folder) {
     return <div>Something wrong</div>
   }
 
@@ -100,7 +151,10 @@ export const ProjectsFolderPage: FC<ProjectsFolderPageType> = () => {
       <p>{project?.description}</p>
 
       <FolderBoard
-        folderId={folderId}
+        segments={segments}
+        order={folder.segmentsOrder}
+        isLoading={segmentsLoading}
+        errorMessage={segmentsError?.message}
         currentLanguage={currentLanguage}
         onCreate={handleAddSegment}
         onDelete={handleDeleteSegment}

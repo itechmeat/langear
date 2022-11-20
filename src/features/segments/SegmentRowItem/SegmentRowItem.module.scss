@@ -6,6 +6,10 @@
     1fr;
   scroll-snap-align: start;
   position: relative;
+
+  &:hover {
+    z-index: 1;
+  }
 }
 
 .selectedRow {

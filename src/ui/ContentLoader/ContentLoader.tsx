@@ -5,11 +5,11 @@ import styles from './ContentLoader.module.scss'
 
 type ContentLoaderType = {
   children: ReactNode
-  error?: any
+  errorMessage?: string
   isLoading?: boolean
 }
 
-export const ContentLoader: FC<ContentLoaderType> = ({ children, error, isLoading }) => {
+export const ContentLoader: FC<ContentLoaderType> = ({ children, errorMessage, isLoading }) => {
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -18,10 +18,10 @@ export const ContentLoader: FC<ContentLoaderType> = ({ children, error, isLoadin
     )
   }
 
-  if (error) {
+  if (errorMessage) {
     return (
       <div className={styles.error}>
-        <Alert type="error">{error.message}</Alert>
+        <Alert type="error">{errorMessage}</Alert>
       </div>
     )
   }
