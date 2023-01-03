@@ -9,12 +9,13 @@ import {
   useState,
 } from 'react'
 import cn from 'classnames'
-import { SegmentRead } from '@features/segments/types'
+import { MappedSegment, SegmentRead, SegmentReadMapped } from '@features/segments/types'
 import { SegmentGridRow, SegmentLangRow } from '@/features/segments/types'
 import { SegmentRowItem, SelectedCell } from '@/features/segments/SegmentRowItem/SegmentRowItem'
 import { ContentLoader } from '@/ui/ContentLoader/ContentLoader'
 import rowStyles from '@/features/segments/SegmentRowItem/SegmentRowItem.module.scss'
 import styles from './FolderBoard.module.scss'
+import { PhraseRead } from '@features/phrases/types'
 
 const NUM_COLUMN_WIDTH = 50
 const DEFAULT_KEY_COLUMN_WIDTH = 50
@@ -71,22 +72,29 @@ export const FolderBoard: FC<FolderBoardType> = ({
     }
   }, [selectedCells?.target])
 
+  const segmentsStructure = useMemo((): { segments: MappedSegment } | null => {
+    if (!segments) return null
+    const items = new Map<string, SegmentReadMapped>(
+      segments.map((segment: SegmentRead) => {
+        const phrases = new Map<string, PhraseRead>(
+          segment.phrases.map((phrase: PhraseRead) => [phrase.language, phrase]),
+        )
+        return [segment.id, { ...segment, phrases }]
+      }),
+    )
+    return { segments: items }
+  }, [segments])
+
   const dataMap: SegmentGridRow[] = useMemo(() => {
     if (!segments) return []
-    const result: SegmentGridRow[] = []
-    order.forEach((segmentId: string) => {
-      const segment = segments.find(item => item.id === segmentId)
-      if (segment) {
-        result.push({
-          id: segment.id,
-          name: segment.name,
-          phrase: segment.phrases.find(phrase => phrase.language === currentLanguage),
-          type: 'string',
-          level: 0,
-        })
-      }
-    })
-    return result
+
+    return segments.map(segment => ({
+      id: segment.id,
+      name: segment.name,
+      phrase: segment.phrases.find(phrase => phrase.language === currentLanguage),
+      type: 'string',
+      level: 0,
+    }))
   }, [segments])
 
   const containerStyle = {

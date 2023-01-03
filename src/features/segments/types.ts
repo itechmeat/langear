@@ -1,14 +1,16 @@
 import { PhraseRead } from '@features/phrases/types'
 
+export type SegmentUUID = string
+
 export type SegmentCreate = {
   name: string
   folderId: string
-  parentId: string
+  parentId: SegmentUUID
   lastUserId: string
 }
 
 export type Segment = SegmentCreate & {
-  id: string
+  id: SegmentUUID
   createdAt: string
   updatedAt: string
   lastUserId: string
@@ -16,6 +18,10 @@ export type Segment = SegmentCreate & {
 
 export type SegmentRead = Segment & {
   phrases: PhraseRead[]
+}
+
+export type SegmentReadMapped = Segment & {
+  phrases: Map<string, PhraseRead>
 }
 
 export type SegmentLangRow = {
@@ -37,3 +43,6 @@ export type SegmentGridRow = SegmentLangRow & {
   type: SegmentGridRowType
   level: number
 }
+
+export type MappedSegment = Map<string, SegmentReadMapped>
+export type MappedTree = Map<string, MappedTree | null>

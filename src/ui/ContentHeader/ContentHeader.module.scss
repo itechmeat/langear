@@ -1,0 +1,14 @@
+.header {
+  display: flex;
+  align-items: center;
+  margin-block: var(--size-xxl);
+}
+
+.title {
+  margin: 0;
+  margin-inline-end: var(--size-l);
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: var(--font-title);
+  font-weight: var(--font-regular);
+  line-height: 2.25rem;
+}

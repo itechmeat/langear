@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client'
 import { useAuthenticated } from '@nhost/react'
 import { GET_PROJECTS } from '@/features/projects/queries'
 import { Project } from '@/features/projects/types'
+import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
 
 type ProjectsListPageType = {}
 
@@ -33,7 +34,7 @@ export const ProjectsListPage: FC<ProjectsListPageType> = () => {
 
   return (
     <div>
-      <h1>Your projects</h1>
+      <ContentHeader title="Your projects" />
 
       {projects?.length ? (
         <ul>

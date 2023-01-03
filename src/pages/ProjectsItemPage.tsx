@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
 import { GET_PROJECT_BY_ID } from '@/features/projects/queries'
 import { ProjectRead } from '@/features/projects/types'
+import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
 
 type ProjectsItemPageType = {}
 
@@ -33,13 +34,18 @@ export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
     return <div>Error in the query {error.message}</div>
   }
 
+  if (!project) {
+    return <h1>Project not found</h1>
+  }
+
   return (
     <div>
-      <h1>{project?.name}</h1>
+      <ContentHeader title={project?.name} />
+      <h1>{project.name}</h1>
 
-      <p>{project?.description}</p>
+      <p>{project.description}</p>
 
-      {!!project?.folders?.length && (
+      {!!project.folders?.length && (
         <ul>
           {project.folders.map(folder => (
             <li key={folder.id}>
