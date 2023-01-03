@@ -11,11 +11,10 @@ type UsersListType = {
 }
 
 export const UsersList: FC<UsersListType> = ({ users, canDelete, onDelete }) => {
-  console.log('🚀 ~ users', users)
   return (
     <ul className={styles.list}>
       {users.map(user => (
-        <li className={styles.item}>
+        <li className={styles.item} key={user.id}>
           <Avatar
             className={styles.avatar}
             name={user.user.displayName}

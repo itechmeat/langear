@@ -10,3 +10,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+[data-backdrop] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(204 10% 10% / 0.1);
+  backdrop-filter: blur(4px);
+}

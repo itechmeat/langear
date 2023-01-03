@@ -1,17 +1,19 @@
 import { FC, useEffect, useMemo, useState } from 'react'
-import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
-import { EditProjectForm } from '@/features/projects/EditProjectForm/EditProjectForm'
 import { toast } from 'react-hot-toast'
+import { useDialogState } from 'ariakit/dialog'
 import { DELETE_PROJECT, GET_PROJECT_BY_ID } from '@/features/projects/queries'
 import { ProjectRead } from '@/features/projects/types'
 import { MembersList } from '@/features/members/MembersList/MembersList'
 import { AddMemberForm } from '@/features/members/AddMemberForm/AddMemberForm'
 import { FoldersList } from '@/features/folders/FoldersList/FoldersList'
 import { AddFolderForm } from '@/features/folders/AddFolderForm/AddFolderForm'
+import { EditProjectForm } from '@/features/projects/EditProjectForm/EditProjectForm'
 import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
 import { Button } from '@/ui/Button/Button'
+import { Dialog } from '@/ui/Dialog/Dialog'
 
 type ProjectsEditPageType = {}
 
@@ -24,6 +26,8 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
   const { loading, data, error, refetch } = useQuery(GET_PROJECT_BY_ID, {
     variables: { id: projectId },
   })
+
+  const dialog = useDialogState()
 
   const [deleteProject, { loading: deletingProject }] = useMutation(DELETE_PROJECT)
 
@@ -71,11 +75,11 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
   }
 
   return (
-    <div>
+    <div className="page-container">
       <ContentHeader title={project?.name} backLink="..">
         {isOwner && !isEdited && (
           <>
-            <Button type="danger" iconStart="delete" outlined onClick={handleDelete}>
+            <Button type="danger" iconStart="delete" outlined onClick={dialog.toggle}>
               Delete
             </Button>
             <Button type="brand" iconStart="edit" onClick={() => setEditedState(true)}>
@@ -105,6 +109,19 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
           }
           onUpdate={refetch}
         />
+      )}
+
+      {dialog.open && (
+        <Dialog
+          dialog={dialog}
+          title="Are you sure?"
+          confirmText="Delete"
+          confirmType="danger"
+          onCancel={dialog.toggle}
+          onConfirm={handleDelete}
+        >
+          The project will be permanently removed!
+        </Dialog>
       )}
     </div>
   )

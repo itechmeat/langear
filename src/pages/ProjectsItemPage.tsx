@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
 import { GET_PROJECT_BY_ID } from '@/features/projects/queries'

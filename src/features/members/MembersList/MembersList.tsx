@@ -1,9 +1,11 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
+import { useDialogState } from 'ariakit/dialog'
 import { DELETE_MEMBER } from '@/features/members/queries'
 import { Member, MembersRoles } from '@/features/members/types'
 import { UsersList } from '@/ui/UsersList/UsersList'
+import { Dialog } from '@/ui/Dialog/Dialog'
 
 type MembersListType = {
   members: Member[]
@@ -14,11 +16,25 @@ type MembersListType = {
 export const MembersList: FC<MembersListType> = ({ members, canDelete, onUpdate }) => {
   const [deleteMember, { loading: deletingMember }] = useMutation(DELETE_MEMBER)
 
-  const handleDelete = async (memberId: string) => {
+  const dialog = useDialogState()
+
+  const [deletedMemberId, setDeletedMemberId] = useState('')
+
+  const clearState = () => {
+    setDeletedMemberId('')
+    dialog.toggle()
+  }
+
+  const askDelete = (folderId: string) => {
+    setDeletedMemberId(folderId)
+    dialog.toggle()
+  }
+
+  const handleDelete = async () => {
     try {
       await deleteMember({
         variables: {
-          id: memberId,
+          id: deletedMemberId,
         },
       })
       onUpdate()
@@ -26,25 +42,29 @@ export const MembersList: FC<MembersListType> = ({ members, canDelete, onUpdate 
     } catch (error) {
       toast.error('Unable to delete member', { id: 'deleteMember' })
     }
+    clearState()
   }
 
   return (
-    <div>
+    <>
       {members.length ? (
-        <UsersList users={members} canDelete={canDelete} onDelete={id => handleDelete(id)} />
+        <UsersList users={members} canDelete={canDelete} onDelete={id => askDelete(id)} />
       ) : (
-        // <ul>
-        //   {members.map((member: Member) => (
-        //     <li key={member.id}>
-        //       {member.user?.displayName || member.id} ({member.role})
-        //       {canDelete && member.role !== MembersRoles.owner && (
-        //         <button onClick={() => handleDelete(member.id)}>delete</button>
-        //       )}
-        //     </li>
-        //   ))}
-        // </ul>
         <div>You're alone in the project :(</div>
       )}
-    </div>
+
+      {dialog.open && (
+        <Dialog
+          dialog={dialog}
+          title="Are you sure?"
+          confirmText="Delete"
+          confirmType="danger"
+          onCancel={clearState}
+          onConfirm={handleDelete}
+        >
+          The member will be removed, but you can add them as a new user later.
+        </Dialog>
+      )}
+    </>
   )
 }
