@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { useAuthenticated } from '@nhost/react'
 import { toast } from 'react-hot-toast'
@@ -18,6 +18,7 @@ import { CREATE_PROJECT } from '@/features/projects/queries'
 import { ADD_MEMBER } from '@/features/members/queries'
 import { CREATE_FOLDER } from '@/features/folders/queries'
 import { MembersRoles } from '@/features/members/types'
+import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
 
 type ProjectsCreatePageType = {}
 
@@ -71,8 +72,8 @@ export const ProjectsCreatePage: FC<ProjectsCreatePageType> = () => {
   const disableForm = creatingProject
 
   return (
-    <div>
-      <h1>Create new project</h1>
+    <div className="page-container">
+      <ContentHeader title="Create new project" backLink=".." />
 
       <Form state={form} aria-labelledby="sign-in-form" className="wrapper">
         <div className="field">
@@ -131,10 +132,6 @@ export const ProjectsCreatePage: FC<ProjectsCreatePageType> = () => {
           </FormSubmit>
         </div>
       </Form>
-
-      <p>
-        <NavLink to="..">Back to projects list</NavLink>
-      </p>
     </div>
   )
 }
