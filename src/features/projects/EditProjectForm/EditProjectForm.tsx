@@ -5,13 +5,16 @@ import { useAuthenticated } from '@nhost/react'
 import { useMutation } from '@apollo/client'
 import { UPDATE_PROJECT } from '@/features/projects/queries'
 import { Project } from '@/features/projects/types'
+import { Button } from '@/ui/Button/Button'
+import styles from './EditProjectForm.module.scss'
 
 type EditProjectFormType = {
   project: Project
   onSave: () => void
+  onCancel: () => void
 }
 
-export const EditProjectForm: FC<EditProjectFormType> = ({ project, onSave }) => {
+export const EditProjectForm: FC<EditProjectFormType> = ({ project, onSave, onCancel }) => {
   const isAuthenticated = useAuthenticated()
   const [updateProject, { loading: updatingProject }] = useMutation(UPDATE_PROJECT)
 
@@ -61,11 +64,15 @@ export const EditProjectForm: FC<EditProjectFormType> = ({ project, onSave }) =>
         <FormInput name={form.names.description} placeholder="description" />
         <FormError name={form.names.description} className="error" />
       </div>
-      <div className="buttons">
-        <FormSubmit className="button" disabled={disableForm}>
-          {updatingProject ? <span>LOADING...</span> : 'Update'}
-        </FormSubmit>
-      </div>
+
+      <footer className={styles.footer}>
+        <Button type="default" outlined data-dialog-dismiss onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="success" disabled={disableForm} onClick={form.submit}>
+          {updatingProject ? <span>LOADING...</span> : 'Save'}
+        </Button>
+      </footer>
     </Form>
   )
 }

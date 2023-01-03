@@ -10,6 +10,7 @@ type ButtonTypeProps = {
   to?: string
   iconStart?: string
   iconEnd?: string
+  disabled?: boolean
   onClick?: () => void
 }
 
@@ -19,6 +20,7 @@ export const Button: FC<PropsWithChildren<ButtonTypeProps>> = ({
   to,
   iconStart,
   iconEnd,
+  disabled,
   children,
   onClick,
 }) => {
@@ -52,7 +54,7 @@ export const Button: FC<PropsWithChildren<ButtonTypeProps>> = ({
   }
 
   return (
-    <AriaButton className={classes} onClick={onClick}>
+    <AriaButton className={classes} disabled={disabled} onClick={onClick}>
       <Children />
     </AriaButton>
   )

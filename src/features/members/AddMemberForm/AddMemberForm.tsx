@@ -14,13 +14,16 @@ import { ADD_MEMBER, SEARCH_USER } from '@/features/members/queries'
 import { MembersRoles } from '@/features/members/types'
 import { Select, SelectItem } from '@/ui/Select/Select'
 import { User } from '@/features/user/types'
+import { Button } from '@/ui/Button/Button'
+import styles from './AddMemberForm.module.scss'
 
 type AddMemberFormType = {
   projectId: string
-  onUpdate: () => void
+  onSubmit: () => void
+  onCancel: () => void
 }
 
-export const AddMemberForm: FC<AddMemberFormType> = ({ projectId, onUpdate }) => {
+export const AddMemberForm: FC<AddMemberFormType> = ({ projectId, onSubmit, onCancel }) => {
   const [user, setUser] = useState<User | null>(null)
   const [searchUser, { loading, error, data: foundUsers }] = useLazyQuery(SEARCH_USER)
 
@@ -70,7 +73,7 @@ export const AddMemberForm: FC<AddMemberFormType> = ({ projectId, onUpdate }) =>
           role,
         },
       })
-      onUpdate()
+      onSubmit()
       toast.success('Member added successfully', { id: 'addUser' })
     } catch (error) {
       toast.error('Unable to add member', { id: 'addUser' })
@@ -81,8 +84,6 @@ export const AddMemberForm: FC<AddMemberFormType> = ({ projectId, onUpdate }) =>
 
   return (
     <div>
-      <h3>Add new member to the project</h3>
-
       {!user && (
         <Form state={userForm} aria-labelledby="search-member-form" className="wrapper">
           <div className="field">
@@ -127,15 +128,21 @@ export const AddMemberForm: FC<AddMemberFormType> = ({ projectId, onUpdate }) =>
                 </FormField>
                 <FormError name={memberForm.names.role} className="error" />
               </div>
-              <div className="buttons">
-                <FormSubmit className="button" disabled={disableForm}>
-                  {addingMember ? <span>LOADING...</span> : 'Submit'}
-                </FormSubmit>
-              </div>
             </Form>
           </div>
         </>
       )}
+
+      <footer className={styles.footer}>
+        <Button type="default" outlined data-dialog-dismiss onClick={onCancel}>
+          Cancel
+        </Button>
+        {!!user && (
+          <Button type="success" disabled={disableForm} onClick={memberForm.submit}>
+            {addingMember ? <span>LOADING...</span> : 'Submit'}
+          </Button>
+        )}
+      </footer>
     </div>
   )
 }

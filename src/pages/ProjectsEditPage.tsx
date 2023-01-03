@@ -27,7 +27,9 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
     variables: { id: projectId },
   })
 
-  const dialog = useDialogState()
+  const addMemberDialog = useDialogState()
+  const createFolderDialog = useDialogState()
+  const deleteDialog = useDialogState()
 
   const [deleteProject, { loading: deletingProject }] = useMutation(DELETE_PROJECT)
 
@@ -62,6 +64,16 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
     }
   }
 
+  const handleMemberSubmit = () => {
+    refetch()
+    addMemberDialog.hide()
+  }
+
+  const handleFolderSubmit = () => {
+    refetch()
+    createFolderDialog.hide()
+  }
+
   if (!isAuthenticated) {
     return <div>You must be authenticated to see this page</div>
   }
@@ -79,7 +91,7 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
       <ContentHeader title={project?.name} backLink="..">
         {isOwner && !isEdited && (
           <>
-            <Button type="danger" iconStart="delete" outlined onClick={dialog.toggle}>
+            <Button type="danger" iconStart="delete" outlined onClick={deleteDialog.show}>
               Delete
             </Button>
             <Button type="brand" iconStart="edit" onClick={() => setEditedState(true)}>
@@ -91,33 +103,59 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
 
       {!isEdited && <p>{project?.description}</p>}
 
-      {isEdited && project && <EditProjectForm project={project} onSave={update} />}
-
-      <ContentHeader title="Members" level={2} />
-      {project && <MembersList members={project.members} canDelete={isOwner} onUpdate={refetch} />}
-      {projectId && isOwner && <AddMemberForm projectId={projectId} onUpdate={refetch} />}
-
-      <ContentHeader title="Folders" level={2} />
-      {project && <FoldersList folders={project.folders} canDelete={isOwner} onUpdate={refetch} />}
-      {project && isOwner && projectId && (
-        <AddFolderForm
-          projectId={projectId}
-          suggestedName={
-            !project?.folders?.length
-              ? 'Default folder'
-              : `New folder ${project.folders.length + 1}`
-          }
-          onUpdate={refetch}
-        />
+      {isEdited && project && (
+        <EditProjectForm project={project} onCancel={() => setEditedState(false)} onSave={update} />
       )}
 
-      {dialog.open && (
+      <ContentHeader title="Members" level={2}>
+        {projectId && isOwner && (
+          <Button type="brand" iconStart="add" onClick={addMemberDialog.show} />
+        )}
+      </ContentHeader>
+      {project && <MembersList members={project.members} canDelete={isOwner} onUpdate={refetch} />}
+      {addMemberDialog.open && (
+        <Dialog dialog={addMemberDialog} title="Add new member to the project">
+          {projectId && isOwner && (
+            <AddMemberForm
+              projectId={projectId}
+              onSubmit={handleMemberSubmit}
+              onCancel={addMemberDialog.hide}
+            />
+          )}
+        </Dialog>
+      )}
+
+      <ContentHeader title="Folders" level={2}>
+        {project && isOwner && projectId && (
+          <Button type="brand" iconStart="add" onClick={createFolderDialog.show} />
+        )}
+      </ContentHeader>
+      {project && <FoldersList folders={project.folders} canDelete={isOwner} onUpdate={refetch} />}
+      {createFolderDialog.open && (
+        <Dialog dialog={createFolderDialog} title="Add new folder to the project">
+          {project && isOwner && projectId && (
+            <AddFolderForm
+              projectId={projectId}
+              suggestedName={
+                !project?.folders?.length
+                  ? 'Default folder'
+                  : `New folder ${project.folders.length + 1}`
+              }
+              onCancel={createFolderDialog.hide}
+              onSubmit={handleFolderSubmit}
+            />
+          )}
+        </Dialog>
+      )}
+
+      {deleteDialog.open && (
         <Dialog
-          dialog={dialog}
+          dialog={deleteDialog}
           title="Are you sure?"
+          cancelText="Cancel"
           confirmText="Delete"
           confirmType="danger"
-          onCancel={dialog.toggle}
+          onCancel={deleteDialog.hide}
           onConfirm={handleDelete}
         >
           The project will be permanently removed!

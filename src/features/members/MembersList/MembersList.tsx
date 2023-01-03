@@ -22,12 +22,12 @@ export const MembersList: FC<MembersListType> = ({ members, canDelete, onUpdate 
 
   const clearState = () => {
     setDeletedMemberId('')
-    dialog.toggle()
+    dialog.hide()
   }
 
   const askDelete = (folderId: string) => {
     setDeletedMemberId(folderId)
-    dialog.toggle()
+    dialog.show()
   }
 
   const handleDelete = async () => {
@@ -57,6 +57,7 @@ export const MembersList: FC<MembersListType> = ({ members, canDelete, onUpdate 
         <Dialog
           dialog={dialog}
           title="Are you sure?"
+          cancelText="Cancel"
           confirmText="Delete"
           confirmType="danger"
           onCancel={clearState}

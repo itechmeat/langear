@@ -18,7 +18,7 @@ type DialogProps = {
 export const Dialog: FC<PropsWithChildren<DialogProps>> = ({
   dialog,
   title,
-  cancelText = 'Cancel',
+  cancelText,
   confirmText,
   confirmType = 'brand',
   children,
@@ -32,18 +32,20 @@ export const Dialog: FC<PropsWithChildren<DialogProps>> = ({
           <h2 className={styles.title}>{title}</h2>
         </header>
         {children}
-        <footer className={styles.footer}>
-          {onCancel && (
-            <Button type="default" outlined data-dialog-dismiss onClick={onCancel}>
-              {cancelText}
-            </Button>
-          )}
-          {confirmText && onConfirm && (
-            <Button type={confirmType} onClick={onConfirm}>
-              {confirmText}
-            </Button>
-          )}
-        </footer>
+        {(cancelText || confirmText) && (
+          <footer className={styles.footer}>
+            {cancelText && onCancel && (
+              <Button type="default" outlined data-dialog-dismiss onClick={onCancel}>
+                {cancelText}
+              </Button>
+            )}
+            {confirmText && onConfirm && (
+              <Button type={confirmType} onClick={onConfirm}>
+                {confirmText}
+              </Button>
+            )}
+          </footer>
+        )}
       </AriaDialog>
     </div>
   )

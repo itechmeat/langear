@@ -17,18 +17,18 @@ type FoldersListType = {
 
 export const FoldersList: FC<FoldersListType> = ({ folders, canDelete, onUpdate }) => {
   const [deleteFolder, { loading: deletingFolder }] = useMutation(DELETE_FOLDER)
-  const dialog = useDialogState()
+  const deleteDialog = useDialogState()
 
   const [deletedFolderId, setDeletedFolderId] = useState('')
 
   const clearState = () => {
     setDeletedFolderId('')
-    dialog.toggle()
+    deleteDialog.hide()
   }
 
   const askDelete = (folderId: string) => {
     setDeletedFolderId(folderId)
-    dialog.toggle()
+    deleteDialog.show()
   }
 
   const handleDelete = async () => {
@@ -90,10 +90,11 @@ export const FoldersList: FC<FoldersListType> = ({ folders, canDelete, onUpdate 
         ))}
       </ul>
 
-      {dialog.open && (
+      {deleteDialog.open && (
         <Dialog
-          dialog={dialog}
+          dialog={deleteDialog}
           title="Are you sure?"
+          cancelText="Cancel"
           confirmText="Delete"
           confirmType="danger"
           onCancel={clearState}
