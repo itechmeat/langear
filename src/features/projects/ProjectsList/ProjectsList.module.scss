@@ -1,0 +1,38 @@
+.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--size-m);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  font-size: var(--font-base);
+
+  & + & {
+    margin-block-start: var(--size-xxs);
+  }
+}
+
+.label {
+  color: var(--color-secondary);
+}
+
+.value {
+  color: var(--color-text);
+}
+
+.folder {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.users {
+  display: flex;
+  justify-content: start;
+}

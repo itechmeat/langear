@@ -20,6 +20,14 @@ export type SegmentRead = Segment & {
   phrases: PhraseRead[]
 }
 
+export type SegmentsAggregate = {
+  segmentsAggregate: {
+    aggregate: {
+      count: number
+    }
+  }
+}
+
 export type SegmentReadMapped = Segment & {
   phrases: Map<string, PhraseRead>
 }

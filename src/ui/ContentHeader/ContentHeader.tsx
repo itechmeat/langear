@@ -10,8 +10,8 @@ type ContentHeaderType = {
 export const ContentHeader: FC<ContentHeaderType> = ({ title, level = 1, children }) => {
   return (
     <header className={styles.header}>
-      <h1 className={styles.title}>{title}</h1>
-      {children}
+      <h2 className={styles.title}>{title}</h2>
+      {children && <div className={styles.actions}>{children}</div>}
     </header>
   )
 }

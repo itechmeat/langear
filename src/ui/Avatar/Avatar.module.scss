@@ -1,0 +1,30 @@
+.avatar {
+  --avatar-size: var(--ui-avatar-size, 1em);
+  --avatar-text-color: var(--ui-avatar-text-color, var(--color-text));
+  --avatar-background-color: var(--ui-avatar-background, var(--color-common));
+
+  overflow: hidden;
+  display: inline-flex;
+  flex: 0 0 var(--avatar-size);
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--avatar-background-color);
+  color: var(--avatar-text-color);
+  font-size: var(--avatar-size);
+  line-height: 1;
+  user-select: none;
+}
+
+.online {
+  border-color: var(--color-success);
+}
+
+.initials {
+  font-weight: get('font.weight.semibold');
+  font-size: calc(0.275em + 5px);
+  font-family: get('font.family.sans-serif');
+}

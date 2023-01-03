@@ -5,6 +5,8 @@ import { useAuthenticated } from '@nhost/react'
 import { GET_PROJECTS } from '@/features/projects/queries'
 import { Project } from '@/features/projects/types'
 import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
+import { ProjectsList } from '@/features/projects/ProjectsList/ProjectsList'
+import { Button } from '@/ui/Button/Button'
 
 type ProjectsListPageType = {}
 
@@ -34,25 +36,13 @@ export const ProjectsListPage: FC<ProjectsListPageType> = () => {
 
   return (
     <div>
-      <ContentHeader title="Your projects" />
+      <ContentHeader title="Your projects">
+        <Button to="create" type="brand" iconStart="add_circle">
+          Create new project
+        </Button>
+      </ContentHeader>
 
-      {projects?.length ? (
-        <ul>
-          {projects.map((project: Project) => (
-            <li key={project.id}>
-              <NavLink to={project.id}>{project.name}</NavLink>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div>You don't have any projects</div>
-      )}
-
-      <p>
-        <NavLink to="create" className="button">
-          Add new project
-        </NavLink>
-      </p>
+      <ProjectsList list={projects} />
     </div>
   )
 }

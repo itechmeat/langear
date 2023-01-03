@@ -1,0 +1,71 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-xl);
+  margin: 0;
+  padding: 4px var(--size-s);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
+  font-size: var(--font-base);
+  line-height: 1.15;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.iconOnly {
+  padding-inline: var(--size-xxs);
+}
+
+.withStartIcon {
+  padding-inline-start: var(--size-xxs);
+}
+
+.withEndIcon {
+  padding-inline-end: var(--size-xxs);
+}
+
+.default {
+  background: var(--color-secondary);
+  color: var(--color-common);
+
+  &.outlined {
+    border-color: var(--color-secondary);
+    background: transparent;
+    color: var(--color-secondary);
+  }
+}
+
+$types: 'accent', 'success', 'warning', 'danger', 'brand';
+
+@each $type in $types {
+  .#{$type} {
+    border-color: var(--color-#{$type});
+    background: var(--color-#{$type});
+    color: var(--color-common);
+
+    &.outlined {
+      border-color: var(--color-#{$type});
+      background: transparent;
+      color: var(--color-#{$type});
+    }
+  }
+}
+
+.label {
+  margin-inline: var(--size-xxs);
+
+  &:first-child {
+    margin-inline-start: 0;
+  }
+
+  &:last-child {
+    margin-inline-end: 0;
+  }
+}
+
+.iconStart,
+.iconEnd {
+  font-size: var(--size-m);
+}

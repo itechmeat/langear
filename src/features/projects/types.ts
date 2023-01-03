@@ -14,6 +14,9 @@ export type Project = ProjectUpdate & {
   createdAt: string
   updatedAt: string
   ownerId?: string
+  user: User
+  members: Member[]
+  folders: Folder[]
 }
 
 export type ProjectRead = Project & {

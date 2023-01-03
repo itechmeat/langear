@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const GET_PROJECTS = gql`
   query MyProjects {
-    projects {
+    projects(order_by: { updated_at: desc }) {
       id
       name
       description
@@ -14,6 +14,23 @@ export const GET_PROJECTS = gql`
         displayName
         avatarUrl
         emailVerified
+      }
+      members {
+        role
+        user {
+          id
+          avatarUrl
+          displayName
+        }
+      }
+      folders(order_by: { updated_at: desc }) {
+        id
+        name
+        segmentsAggregate: segments_aggregate {
+          aggregate {
+            count
+          }
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-import { SegmentRead } from '@/features/segments/types'
+import { SegmentRead, SegmentsAggregate } from '@/features/segments/types'
 
 export type FolderLanguage = {
   language: string
@@ -18,6 +18,7 @@ export type FolderCreate = Omit<FolderUpdate, 'id'> & {
 }
 
 export type Folder = FolderUpdate &
+  SegmentsAggregate &
   FolderCreate & {
     createdAt: string
     updatedAt: string

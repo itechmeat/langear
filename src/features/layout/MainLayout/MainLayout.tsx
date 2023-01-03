@@ -1,20 +1,18 @@
-import { FC, ReactNode } from 'react'
+import { FC, PropsWithChildren } from 'react'
+import { Outlet } from 'react-router-dom'
 import { Header } from '@/features/layout/Header/Header'
 import styles from './MainLayout.module.scss'
-import { Outlet } from 'react-router-dom'
 
 type MainLayoutProps = {}
 
-export const MainLayout: FC<MainLayoutProps> = () => {
+export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({ children }) => {
   return (
     <div className={styles.layout}>
       <Header />
 
-      <main className={styles.main}>
-        <Outlet />
-      </main>
+      <main className={styles.main}>{!children ? <Outlet /> : children}</main>
 
-      <footer className={styles.footer}>2022</footer>
+      <footer className={styles.footer}>langear © 2023</footer>
     </div>
   )
 }

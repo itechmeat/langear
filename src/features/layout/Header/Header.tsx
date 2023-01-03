@@ -1,9 +1,10 @@
 import { FC, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { Button } from 'ariakit/button'
 import { useAuthenticationStatus, useSignOut, useUserData } from '@nhost/react'
 import { Navigation } from '@/features/layout/Navigation/Navigation'
+import { Button } from '@/ui/Button/Button'
+import { Avatar } from '@/ui/Avatar/Avatar'
 import styles from './Header.module.scss'
 
 type HeaderProps = {}
@@ -30,11 +31,17 @@ export const Header: FC<HeaderProps> = () => {
       <div className={styles.user}>
         {isAuthenticated ? (
           <div>
-            <span style={{ marginRight: 20 }}>{userData?.displayName}</span>
-            <Button onClick={handleSignOut}>Sign Out</Button>
+            <span className={styles.userName}>
+              {userData?.displayName ? (
+                <Avatar name={userData.displayName} size={32} legend={userData.displayName} />
+              ) : null}
+            </span>
+            <Button outlined onClick={handleSignOut}>
+              Sign Out
+            </Button>
           </div>
         ) : (
-          <button>Sign In</button>
+          <Button type="brand">Sign In</Button>
         )}
       </div>
     </header>

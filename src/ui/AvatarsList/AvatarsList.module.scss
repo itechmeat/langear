@@ -1,0 +1,11 @@
+.avatars {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.avatar {
+  &:not(:first-child) {
+    margin-inline-start: -6px;
+  }
+}

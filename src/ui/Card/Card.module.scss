@@ -1,0 +1,33 @@
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-common);
+}
+
+.header {
+  padding: var(--size-xs) var(--size-l);
+  border-block-end: inherit;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+}
+
+.titleLink {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.actions {
+  margin-inline-start: var(--size-m);
+}
+
+.content {
+  padding: var(--size-s) var(--size-l);
+}
+
+.footer {
+  padding: var(--size-xs) var(--size-l);
+  border-block-start: inherit;
+}
