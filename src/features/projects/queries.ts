@@ -16,16 +16,27 @@ export const GET_PROJECTS = gql`
         emailVerified
       }
       members {
+        id
         role
+        userId: user_id
+        projectId: project_id
+        createdAt: created_at
+        updatedAt: updated_at
         user {
           id
-          avatarUrl
           displayName
+          emailVerified
+          avatarUrl
         }
       }
       folders(order_by: { updated_at: desc }) {
         id
         name
+        projectId: project_id
+        createdAt: created_at
+        updatedAt: updated_at
+        languages
+        format
         segmentsAggregate: segments_aggregate {
           aggregate {
             count
@@ -114,7 +125,7 @@ export const GET_PROJECT_BY_ID = gql`
           avatarUrl
         }
       }
-      folders(where: { project_id: { _eq: $id } }) {
+      folders(order_by: { updated_at: desc }, where: { project_id: { _eq: $id } }) {
         id
         name
         projectId: project_id
@@ -122,6 +133,11 @@ export const GET_PROJECT_BY_ID = gql`
         updatedAt: updated_at
         languages
         format
+        segmentsAggregate: segments_aggregate {
+          aggregate {
+            count
+          }
+        }
       }
     }
   }

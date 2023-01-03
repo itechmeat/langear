@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
 import { DELETE_MEMBER } from '@/features/members/queries'
 import { Member, MembersRoles } from '@/features/members/types'
+import { UsersList } from '@/ui/UsersList/UsersList'
 
 type MembersListType = {
   members: Member[]
@@ -29,20 +30,19 @@ export const MembersList: FC<MembersListType> = ({ members, canDelete, onUpdate 
 
   return (
     <div>
-      <h2>Members</h2>
-
       {members.length ? (
-        <ul>
-          {members.map((member: Member) => (
-            <li key={member.id}>
-              {member.user?.displayName || member.id} ({member.role})
-              {canDelete && member.role !== MembersRoles.owner && (
-                <button onClick={() => handleDelete(member.id)}>delete</button>
-              )}
-            </li>
-          ))}
-        </ul>
+        <UsersList users={members} canDelete={canDelete} onDelete={id => handleDelete(id)} />
       ) : (
+        // <ul>
+        //   {members.map((member: Member) => (
+        //     <li key={member.id}>
+        //       {member.user?.displayName || member.id} ({member.role})
+        //       {canDelete && member.role !== MembersRoles.owner && (
+        //         <button onClick={() => handleDelete(member.id)}>delete</button>
+        //       )}
+        //     </li>
+        //   ))}
+        // </ul>
         <div>You're alone in the project :(</div>
       )}
     </div>

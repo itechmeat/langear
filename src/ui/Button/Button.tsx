@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren, useCallback } from 'react'
+import { NavLink } from 'react-router-dom'
 import { Button as AriaButton } from 'ariakit/button'
 import cn from 'classnames'
 import styles from './Button.module.scss'
-import { NavLink } from 'react-router-dom'
 
 type ButtonTypeProps = {
   type?: 'default' | 'accent' | 'success' | 'warning' | 'danger' | 'brand'

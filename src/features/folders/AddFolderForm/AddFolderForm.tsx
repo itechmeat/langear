@@ -112,8 +112,6 @@ export const AddFolderForm: FC<AddFolderFormType> = ({
           </FormSubmit>
         </div>
       </Form>
-
-      <hr />
     </div>
   )
 }

@@ -10,6 +10,8 @@ import { MembersList } from '@/features/members/MembersList/MembersList'
 import { AddMemberForm } from '@/features/members/AddMemberForm/AddMemberForm'
 import { FoldersList } from '@/features/folders/FoldersList/FoldersList'
 import { AddFolderForm } from '@/features/folders/AddFolderForm/AddFolderForm'
+import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
+import { Button } from '@/ui/Button/Button'
 
 type ProjectsEditPageType = {}
 
@@ -70,23 +72,28 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
 
   return (
     <div>
-      <h1>{project?.name}</h1>
+      <ContentHeader title={project?.name} backLink="..">
+        {isOwner && !isEdited && (
+          <>
+            <Button type="danger" iconStart="delete" outlined onClick={handleDelete}>
+              Delete
+            </Button>
+            <Button type="brand" iconStart="edit" onClick={() => setEditedState(true)}>
+              Edit content
+            </Button>
+          </>
+        )}
+      </ContentHeader>
 
-      {!isEdited && (
-        <p>
-          {project?.description} <button onClick={() => setEditedState(true)}>edit</button>
-        </p>
-      )}
+      {!isEdited && <p>{project?.description}</p>}
 
       {isEdited && project && <EditProjectForm project={project} onSave={update} />}
 
-      <hr />
-
+      <ContentHeader title="Members" level={2} />
       {project && <MembersList members={project.members} canDelete={isOwner} onUpdate={refetch} />}
       {projectId && isOwner && <AddMemberForm projectId={projectId} onUpdate={refetch} />}
 
-      <hr />
-
+      <ContentHeader title="Folders" level={2} />
       {project && <FoldersList folders={project.folders} canDelete={isOwner} onUpdate={refetch} />}
       {project && isOwner && projectId && (
         <AddFolderForm
@@ -99,16 +106,6 @@ export const ProjectsEditPage: FC<ProjectsEditPageType> = () => {
           onUpdate={refetch}
         />
       )}
-
-      {isOwner && (
-        <p>
-          <button onClick={handleDelete}>delete</button>
-        </p>
-      )}
-
-      <p>
-        <NavLink to="..">Back to project</NavLink>
-      </p>
     </div>
   )
 }

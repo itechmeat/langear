@@ -4,7 +4,9 @@ import { useQuery } from '@apollo/client'
 import { useAuthenticated, useUserId } from '@nhost/react'
 import { GET_PROJECT_BY_ID } from '@/features/projects/queries'
 import { ProjectRead } from '@/features/projects/types'
+import { FoldersList } from '@/features/folders/FoldersList/FoldersList'
 import { ContentHeader } from '@/ui/ContentHeader/ContentHeader'
+import { Button } from '@/ui/Button/Button'
 
 type ProjectsItemPageType = {}
 
@@ -12,7 +14,7 @@ export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
   const { projectId } = useParams()
   const isAuthenticated = useAuthenticated()
   const userId = useUserId()
-  const { loading, data, error } = useQuery(GET_PROJECT_BY_ID, {
+  const { loading, data, error, refetch } = useQuery(GET_PROJECT_BY_ID, {
     variables: { id: projectId },
   })
 
@@ -39,31 +41,17 @@ export const ProjectsItemPage: FC<ProjectsItemPageType> = () => {
   }
 
   return (
-    <div>
-      <ContentHeader title={project?.name} />
-      <h1>{project.name}</h1>
-
+    <div className="page-container">
+      <ContentHeader title={project?.name} backLink="..">
+        {isOwner && (
+          <Button to="edit" type="brand" iconStart="edit">
+            Edit the project
+          </Button>
+        )}
+      </ContentHeader>
       <p>{project.description}</p>
 
-      {!!project.folders?.length && (
-        <ul>
-          {project.folders.map(folder => (
-            <li key={folder.id}>
-              <NavLink to={folder.id}>{folder.name}</NavLink>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {isOwner && (
-        <p>
-          <NavLink to="edit">Edit the project</NavLink>
-        </p>
-      )}
-
-      <p>
-        <NavLink to="..">Back to projects list</NavLink>
-      </p>
+      {project && <FoldersList folders={project.folders} canDelete={isOwner} onUpdate={refetch} />}
     </div>
   )
 }

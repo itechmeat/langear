@@ -35,7 +35,7 @@ export const ProjectsListPage: FC<ProjectsListPageType> = () => {
   }
 
   return (
-    <div>
+    <div className="page-container">
       <ContentHeader title="Your projects">
         <Button to="create" type="brand" iconStart="add_circle">
           Create new project
